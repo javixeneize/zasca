@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+th {
+    font-weight: normal;
+}
+
+
+
+    </style>
+
+    <script src="https://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
+
+</head>
+
+<title> SCA report </title>
+<body>
+<h1>{{ appname.package }}:{{ appname.version }} Report </h1>
+<h2>Time: {{ now }}</h2>
+<hr>
+<table class="sortable">
+
+    <tr bgcolor="#888888" class="item">
+        <th style="font-weight:bold"> Library</th>
+        <th style="font-weight:bold"> Advisory ID</th>
+        <th style="font-weight:bold"> Severity</th>
+        <th style="font-weight:bold"> CVSS Score</th>
+        <th style="font-weight:bold"> Summary</th>
+        <th style="font-weight:bold"> Vulnerable range</th>
+        <th style="font-weight:bold"> Fix version</th>
+    </tr>
+    {% for item in report %}
+    {% if item.advisory.severity == "CRITICAL" %}
+    <tr bgcolor="#FF0000">
+        {% elif item.advisory.severity == "HIGH" %}
+    <tr bgcolor="#FF9933">
+        {% elif item.advisory.severity == "MODERATE" %}
+    <tr bgcolor="#FFFF66">
+        {% elif item.advisory.severity == "MODERATE" %}
+    <tr bgcolor="#99FF33">
+        {% else %}
+    <tr bgcolor="#E0E0E0">
+        {% endif %}
+        <th> {{item.package}}</th>
+        <th> {{item.advisory.advisory.ghsa.value}} <br> {{item.advisory.advisory.cve.value}}</th>
+        <th> {{item.advisory.severity}}</th>
+        <th> {{item.advisory.advisory.cvss.score}}</th>
+        <th> {{item.advisory.advisory.summary}}</th>
+        <th> {{item.advisory.vulnerableVersionRange}}</th>
+        <th> {{item.advisory.firstPatchedVersion.identifier}}</th>
+
+    </tr>
+    {% endfor %}
+</table>
+
+
+</body>
+</html>

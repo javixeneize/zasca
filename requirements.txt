@@ -1,0 +1,5 @@
+Jinja2==3.0.1
+requests==2.25.1
+click==8.0.1
+tqdm==4.62.3
+PyYAML==6.0

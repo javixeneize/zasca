@@ -1,7 +1,7 @@
 from yasca import maven_scanner, generate_report, tree_generator, sbom_generator
 from tqdm import tqdm
 import collections
-import argparse
+import click
 
 
 def scan_maven(filepath, ignore_dev):
@@ -15,25 +15,16 @@ def scan_maven(filepath, ignore_dev):
             mavenscan.validate_vulnerable_version(advisories, dependency.get('package'), dependency.get('version'))
     return mavenscan.advisory_list, mavenscan.appname, dependencies
 
-
-def run_cli_scan(file, html, sbom, ignore_dev):
-    maven_data, appname, dependencies = scan_maven(file, ignore_dev)
-    if html:
-        generate_report.generate_html_report(maven_data, appname)
+@click.command()
+@click.argument('file', required=True)
+@click.option('--sbom', help='Generates CycloneDX SBOM', is_flag=True, default=False)
+@click.option('--include_dev', help='Include dev dependencies', is_flag=True, default=False)
+def run_cli(file, sbom, include_dev):
+    maven_data, appname, dependencies = scan_maven(file, include_dev)
+    generate_report.generate_html_report(maven_data, appname)
     if sbom:
         sbom_generator.generate_cyclonedx_sbom(dependencies)
 
     unique_vuln_libraries = collections.Counter(item['package'] for item in maven_data)
 
     print('{} vulnerabilities detected in {} vulnerable libraries'.format(len(maven_data), len(unique_vuln_libraries)))
-
-
-def run_cli():
-    parser = argparse.ArgumentParser(description='SCApegoat, an opensource SCA tool')
-    parser.add_argument('file', type=str, help='Path for the pom.xml file')
-    parser.add_argument('--html', type=bool, default=True, help='Generates a html report')
-    parser.add_argument('--sbom', type=bool, default=False, help='Generates a SBOM')
-    parser.add_argument('--ignore_dev', type=bool, default=True, help='Ignore dev dependencies from the scan')
-
-    args = parser.parse_args()
-    run_cli_scan(args.file, args.html, args.sbom)

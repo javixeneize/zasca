@@ -6,11 +6,11 @@ PATH_PROJECT = os.path.realpath(os.path.dirname(__file__))
 DEP_FILE = PATH_PROJECT + '/yasca_dep_tree.txt'
 
 
-def generate_tree(filepath, ignore_dev):
-    scope = '-Dscope=test'
+def generate_tree(filepath, include_Dev):
+    scope = '-Dscope=compile'
     try:
-        if ignore_dev:
-            scope = '-Dscope=compile'
+        if include_Dev:
+            scope = '-Dscope=test'
         exitcode = subprocess.call(['mvn', 'dependency:tree', '-Doutput={}'.format(DEP_FILE), '-f', filepath, scope],  # nosec
                                    stdout=subprocess.DEVNULL,
                                    stderr=subprocess.STDOUT)

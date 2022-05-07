@@ -4,8 +4,8 @@ import collections
 import argparse
 
 
-def scan_maven(filepath):
-    tree_generator.generate_tree(filepath)
+def scan_maven(filepath, ignore_dev):
+    tree_generator.generate_tree(filepath, ignore_dev)
     dependencies, appname = tree_generator.get_dependencies()
     mavenscan = maven_scanner.Maven_scanner(appname)
     print("Scanning dependencies...")
@@ -16,8 +16,8 @@ def scan_maven(filepath):
     return mavenscan.advisory_list, mavenscan.appname, dependencies
 
 
-def run_cli_scan(file, html, sbom):
-    maven_data, appname, dependencies = scan_maven(file)
+def run_cli_scan(file, html, sbom, ignore_dev):
+    maven_data, appname, dependencies = scan_maven(file, ignore_dev)
     if html:
         generate_report.generate_html_report(maven_data, appname)
     if sbom:
@@ -33,5 +33,7 @@ def run_cli():
     parser.add_argument('file', type=str, help='Path for the pom.xml file')
     parser.add_argument('--html', type=bool, default=True, help='Generates a html report')
     parser.add_argument('--sbom', type=bool, default=False, help='Generates a SBOM')
+    parser.add_argument('--ignore_dev', type=bool, default=True, help='Ignore dev dependencies from the scan')
+
     args = parser.parse_args()
     run_cli_scan(args.file, args.html, args.sbom)

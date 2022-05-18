@@ -34,10 +34,10 @@ class Maven_scanner():
 
     def validate_vulnerable_version(self, advisories, package, version):
         for advisory in advisories:
+            major_eq = False
+            minor_eq = False
             try:
                 bottom, top = advisory.get('vulnerableVersionRange').split(',')
-                major_eq = False
-                minor_eq = False
                 if '>=' in bottom:
                     major_eq = True
                 if '<=' in top:
@@ -56,6 +56,7 @@ class Maven_scanner():
                 if version < topnumber or (version == topnumber and minor_eq):
                     advisory = self.parse_identifiers(advisory)
                     self.advisory_list.append({'package': package + ':' + version, 'advisory': advisory.copy()})
+
 
     def parse_identifiers(self, advisory):
         dicts = advisory.get('advisory').get('identifiers')

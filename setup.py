@@ -12,7 +12,7 @@ setup(
     include_package_data=True,
     entry_points={
         'console_scripts': [
-            'yasca-cli=yasca.main:run_cli',
+            'yasca=yasca.main:run_cli',
         ],
     },
     install_requires=requirements,

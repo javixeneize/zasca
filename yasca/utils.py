@@ -1,6 +1,10 @@
 import json
 from operator import itemgetter
+import os
+from jinja2 import Template
+from datetime import datetime
 
+PATH_PROJECT = os.path.realpath(os.path.dirname(__file__))
 SEVERITY = {'CRITICAL': 4, 'HIGH': 3, 'MODERATE': 2, 'LOW': 1}
 
 def check_quality_gate(severity_data, threshold):
@@ -31,3 +35,22 @@ def suppress_fp(report, suppression_file):
     except json.decoder.JSONDecodeError:
         print("JSON malformed. Skipping suppression process..")
     return report, suppressed_issues
+
+def generate_cyclonedx_sbom(dependencies):
+    with open(PATH_PROJECT + '/template/cyclonedx_template.json') as file:
+        cyclone_data = json.loads(file.read())
+
+    for item in dependencies:
+        del item['package']
+        item['type'] = 'library'
+        cyclone_data['components'].append(item.copy())
+
+    with open('cyclonedx_report.json', 'w') as file:
+        file.write(json.dumps(cyclone_data))
+
+def generate_html_report(data, appname):
+    with open(PATH_PROJECT + '/template/report_template.html') as file:
+        template = Template(file.read())
+        template.globals['now'] = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
+    with open('sca_report.html', 'w') as file:
+        file.write(template.render(report=data, appname=appname))

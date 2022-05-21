@@ -65,9 +65,9 @@ jobs:
           asset_name: Yasca changelog
           asset_content_type: text/plain
 
-#      - name: Publish
-#        env:
-#          TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
-#          TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
-#        run: |
-#          twine upload dist/*
+      - name: Publish
+        env:
+          TWINE_USERNAME: ${{ secrets.TWINE_USERNAME }}
+          TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
+        run: |
+          twine upload dist/*

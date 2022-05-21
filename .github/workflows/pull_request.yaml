@@ -24,11 +24,11 @@ jobs:
       - name: Safety dependency scan
         run: python -m safety check
 
-#      - name: Checkout origin branch if PR 'to-branch' is main
-#        if: github.base_ref == 'main'
-#        uses: actions/checkout@v2
-#        with:
-#          ref: ${{ github.head_ref }}
+      - name: Checkout origin branch if PR 'to-branch' is main
+        if: github.base_ref == 'main'
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
 
       - name: BumpVersion if PR 'to-branch' is main
         if: github.base_ref == 'main'

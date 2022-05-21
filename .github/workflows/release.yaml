@@ -50,7 +50,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist/yasca-${{ env.VERSION }}-py2.py3-none-any.whl
+          asset_path: ./dist/yasca-${{ env.VERSION }}-py3-none-any.whl
           asset_name: Yasca Wheel
           asset_content_type: application/x-python-wheel
 

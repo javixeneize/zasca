@@ -1,4 +1,4 @@
-name: Yasca Push
+name: Yasca Release
 on:
   push:
     branches: [ main ]

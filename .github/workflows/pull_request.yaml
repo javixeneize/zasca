@@ -33,9 +33,11 @@ jobs:
       - name: BumpVersion if PR 'to-branch' is main
         if: github.base_ref == 'main'
         run: |
+          grep -i '__version__ = ' setup.py | tr -d '__version__ = "'
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           bump2version minor
+          grep -i '__version__ = ' setup.py | tr -d '__version__ = "'
 
       - name: Push changes if PR 'to-branch' is main
         if: github.base_ref == 'main'

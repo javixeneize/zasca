@@ -54,17 +54,6 @@ jobs:
           asset_name: Yasca Wheel
           asset_content_type: application/x-python-wheel
 
-      - name: Upload Changelog
-        id: upload_changelog
-        uses: actions/upload-release-asset@v1.0.1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: changelog
-          asset_name: Yasca changelog
-          asset_content_type: text/plain
-
       - name: Publish
         env:
           TWINE_USERNAME: ${{ secrets.TWINE_USERNAME }}

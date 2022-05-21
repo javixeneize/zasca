@@ -11,7 +11,8 @@ def generate_tree(filepath, include_Dev):
     try:
         if include_Dev:
             scope = '-Dscope=test'
-        exitcode = subprocess.call(['mvn', 'dependency:tree', '-Doutput={}'.format(DEP_FILE), '-f', filepath, scope],  # nosec
+        exitcode = subprocess.call(['mvn', 'dependency:tree', '-Doutput={}'.format(DEP_FILE), '-f', filepath, scope],
+                                   # nosec
                                    stdout=subprocess.DEVNULL,
                                    stderr=subprocess.STDOUT)
     except FileNotFoundError:

@@ -57,7 +57,6 @@ class Maven_scanner():
                     advisory = self.parse_identifiers(advisory)
                     self.advisory_list.append({'package': package + ':' + version, 'advisory': advisory.copy()})
 
-
     def parse_identifiers(self, advisory):
         dicts = advisory.get('advisory').get('identifiers')
         advisory.get('advisory')['cve'] = next((id for id in dicts if id.get('type') == "CVE"),

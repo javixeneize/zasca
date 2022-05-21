@@ -45,4 +45,9 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ github.head_ref }}
-          force: true
+
+      - name: test ls
+        run: |
+          ls -la
+          cat setup.cfg
+          cat setup.py

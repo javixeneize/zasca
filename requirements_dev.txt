@@ -1,0 +1,4 @@
+flake8
+bandit
+safety
+bump2version

@@ -12,7 +12,7 @@ class Maven_scanner():
     def __init__(self, appname):
         self.appname = appname
         self.advisory_list = []
-        self.query = yaml.safe_load(open(PATH_PROJECT + '/data/queries.yaml')).get('maven_query')
+        self.query = yaml.safe_load(open(PATH_PROJECT + '/../data/queries.yaml')).get('maven_query')
 
     def get_advisories(self, package):
         vulndata = []
@@ -34,10 +34,10 @@ class Maven_scanner():
 
     def validate_vulnerable_version(self, advisories, package, version):
         for advisory in advisories:
+            major_eq = False
+            minor_eq = False
             try:
                 bottom, top = advisory.get('vulnerableVersionRange').split(',')
-                major_eq = False
-                minor_eq = False
                 if '>=' in bottom:
                     major_eq = True
                 if '<=' in top:

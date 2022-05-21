@@ -24,7 +24,7 @@ local package. It will generate a binary called Yasca-cli
 
 The tool needs to receive a parameter with the path to the pom.xml to be scanned. It also has two optional parameters
 
---html (default True): To generate an html report 
+--html (default True): To generate an html report
 
 --sbom (default False): To generate a cyclonedx sbom file 
 

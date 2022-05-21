@@ -3,12 +3,16 @@ import sys
 import os
 
 PATH_PROJECT = os.path.realpath(os.path.dirname(__file__))
-DEP_FILE = PATH_PROJECT + '/scapegoat_dep_tree.txt'
+DEP_FILE = PATH_PROJECT + '/yasca_dep_tree.txt'
 
 
-def generate_tree(filepath):
+def generate_tree(filepath, include_Dev):
+    scope = '-Dscope=compile'
     try:
-        exitcode = subprocess.call(['mvn', 'dependency:tree', '-Doutput={}'.format(DEP_FILE), '-f', filepath],  # nosec
+        if include_Dev:
+            scope = '-Dscope=test'
+        exitcode = subprocess.call(['mvn', 'dependency:tree', '-Doutput={}'.format(DEP_FILE), '-f',  # nosec
+                                    filepath, scope],
                                    stdout=subprocess.DEVNULL,
                                    stderr=subprocess.STDOUT)
     except FileNotFoundError:

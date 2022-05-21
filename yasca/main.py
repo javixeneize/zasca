@@ -1,12 +1,14 @@
-from yasca import maven_scanner, generate_report, tree_generator, sbom_generator
+from yasca import utils
+from yasca.maven_scanner import maven_tree_generator, maven_scanner
 from tqdm import tqdm
 import collections
-import argparse
+import sys
+import click
 
 
-def scan_maven(filepath):
-    tree_generator.generate_tree(filepath)
-    dependencies, appname = tree_generator.get_dependencies()
+def scan_maven(filepath, ignore_dev):
+    maven_tree_generator.generate_tree(filepath, ignore_dev)
+    dependencies, appname = maven_tree_generator.get_dependencies()
     mavenscan = maven_scanner.Maven_scanner(appname)
     print("Scanning dependencies...")
     for dependency in tqdm(dependencies):
@@ -16,22 +18,29 @@ def scan_maven(filepath):
     return mavenscan.advisory_list, mavenscan.appname, dependencies
 
 
-def run_cli_scan(file, html, sbom):
-    maven_data, appname, dependencies = scan_maven(file)
-    if html:
-        generate_report.generate_html_report(maven_data, appname)
+def write_output(num_issues, unique_libraries, num_fp, qg):
+    print('{} vulnerabilities detected in {} vulnerable libraries'.format(num_issues, unique_libraries))
+    if num_fp:
+        print('{} vulnerabilities supressed'.format(num_fp))
+    print('Quality gate passed: {}'.format(qg))
+
+
+@click.command()
+@click.argument('file', required=True)
+@click.option('--sbom', help='Generates CycloneDX SBOM', is_flag=True, default=False)
+@click.option('--include_dev', help='Include dev dependencies', is_flag=True, default=False)
+@click.option('--quality_gate', help='Maximum severity allowed', default='LOW')
+@click.option('--suppression_file', help='False positives to remove')
+def run_cli(file, sbom, include_dev, quality_gate, suppression_file):
+    suppressed_items = []
+    maven_data, appname, dependencies = scan_maven(file, include_dev)
     if sbom:
-        sbom_generator.generate_cyclonedx_sbom(dependencies)
-
+        utils.generate_cyclonedx_sbom(dependencies)
+    if suppression_file:
+        maven_data, suppressed_items = utils.suppress_fp(maven_data, suppression_file)
+    utils.generate_html_report(maven_data, appname)
     unique_vuln_libraries = collections.Counter(item['package'] for item in maven_data)
-
-    print('{} vulnerabilities detected in {} vulnerable libraries'.format(len(maven_data), len(unique_vuln_libraries)))
-
-
-def run_cli():
-    parser = argparse.ArgumentParser(description='SCApegoat, an opensource SCA tool')
-    parser.add_argument('file', type=str, help='Path for the pom.xml file')
-    parser.add_argument('--html', type=bool, default=True, help='Generates a html report')
-    parser.add_argument('--sbom', type=bool, default=False, help='Generates a SBOM')
-    args = parser.parse_args()
-    run_cli_scan(args.file, args.html, args.sbom)
+    severity_data = collections.Counter(item.get('advisory').get('severity') for item in maven_data)
+    qg_passed = utils.check_quality_gate(severity_data, quality_gate)
+    write_output(len(maven_data), len(unique_vuln_libraries), len(suppressed_items), qg_passed)
+    sys.exit(not qg_passed)

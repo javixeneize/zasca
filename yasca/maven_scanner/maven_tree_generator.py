@@ -11,9 +11,10 @@ def generate_tree(filepath, include_Dev):
     try:
         if include_Dev:
             scope = '-Dscope=test'
-        exitcode = subprocess.call(['mvn', 'dependency:tree', '-Doutput={}'.format(DEP_FILE), '-f', filepath, scope],  # nosec
+        exitcode = subprocess.call(['mvn', 'dependency:tree', '-Doutput={}'.format(DEP_FILE), '-f',  # nosec
+                                    filepath, scope],
                                    stdout=subprocess.DEVNULL,
-                                   stderr=subprocess.STDOUT) 
+                                   stderr=subprocess.STDOUT)
     except FileNotFoundError:
         print("Looks like maven is not correctly installed or the pom.xml file can't be resolved. Please check")
     if exitcode != 0:

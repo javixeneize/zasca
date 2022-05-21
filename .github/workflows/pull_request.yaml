@@ -41,7 +41,7 @@ jobs:
           grep -i '__version__ = ' setup.py | tr -d '__version__ = "'
 
       - name: Commit back to the repo
-       if: github.base_ref == 'main
+        if: github.base_ref == 'main
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: Bumpversion changes

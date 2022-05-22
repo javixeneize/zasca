@@ -17,7 +17,7 @@ inputs:
         required: false
 runs:
     using: 'docker'
-    image: 'javidr/yasca:latest'
+    image: 'docker://javidr/yasca'
     args:
         - '${{ inputs.file }}'
         - '--sbom' 

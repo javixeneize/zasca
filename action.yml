@@ -1,0 +1,22 @@
+name: 'Yasca'
+description: 'Github action to run Yasca'
+Author: 'javixeneize'
+branding:
+  icon: 'shield'  
+  color: 'red'
+inputs:
+    file:
+        required: true
+    sbom:
+        required: false
+    include_dev:
+        required: false
+    quality_gate:
+        required: false
+    suppression_file:
+        required: false
+runs:
+    using: 'docker'
+    image: 'Dockerfile'
+    args:
+        - '${{ inputs.file }}'

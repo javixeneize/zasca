@@ -17,6 +17,6 @@ inputs:
         required: false
 runs:
     using: 'docker'
-    image: 'Dockerfile'
+    image: 'javidr/yasca'
     args:
         - '${{ inputs.file }}'

@@ -59,3 +59,29 @@ def generate_html_report(data, appname):
         template.globals['now'] = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
     with open('sca_report.html', 'w') as file:
         file.write(template.render(report=data, appname=appname))
+
+
+def generate_sarif(vulnerabilities):
+    with open(PATH_PROJECT + '/template/sarif_template.sarif') as file:
+        sarif_data = json.loads(file.read())
+        vuln_data = []
+        for item in vulnerabilities:
+            vulnerability = {'locations': []}
+            location = {
+                    'physicalLocation': {
+                        'artifactLocation': {
+                            'uri': ''
+                        }
+                    }
+                }
+            vulnerability["ruleId"] = next(vuln for vuln in item.get('advisory').get('advisory').
+                                           get('identifiers') if vuln.get('type') == "GHSA").get('value')
+            vulnerability["message"] = {'text': item.get('advisory').get('advisory').get('description')}
+            location['physicalLocation']['artifactLocation']['uri'] = item.get('package')
+            vulnerability["locations"].append(location.copy())
+            vuln_data.append(vulnerability.copy())
+
+        sarif_data['runs'][0]['results'] = vuln_data
+
+    with open('sarif_report.sarif', 'w') as file:
+        file.write(json.dumps(sarif_data))

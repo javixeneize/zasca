@@ -30,7 +30,7 @@ def write_output(num_issues, unique_libraries, num_fp, qg):
 @click.option('--sbom', help='Generates CycloneDX SBOM', default=True)
 @click.option('--include_dev', help='Include dev dependencies', default=False)
 @click.option('--quality_gate', help='Maximum severity allowed', default='LOW')
-@click.option('--suppression_file', help='False positives to remove')
+@click.option('--suppression_file', help='False positives to remove', default="")
 def run_cli(file, sbom, include_dev, quality_gate, suppression_file):
     suppressed_items = []
     maven_data, appname, dependencies = scan_maven(file, include_dev)

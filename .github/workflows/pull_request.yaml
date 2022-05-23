@@ -1,4 +1,5 @@
 name: Yasca PR
+
 on: pull_request
 jobs:
   build:
@@ -33,15 +34,10 @@ jobs:
       - name: BumpVersion if PR 'to-branch' is main
         if: github.base_ref == 'main'
         run: |
-          grep -i '__version__ = ' setup.py | tr -d '__version__ = "'
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
           bump2version minor
-          grep -i '__version__ = ' setup.py | tr -d '__version__ = "'
 
-      - name: Push changes if PR 'to-branch' is main
+      - name: Commit back to the repo
         if: github.base_ref == 'main'
-        uses: ad-m/github-push-action@v0.6.0
+        uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.head_ref }}
+          commit_message: Bumpversion changes

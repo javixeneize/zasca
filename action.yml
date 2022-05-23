@@ -1,0 +1,35 @@
+name: 'Yasca'
+description: 'Github action to run Yasca'
+Author: 'javixeneize'
+branding:
+  icon: 'shield'  
+  color: 'red'
+inputs:
+    file:
+        required: true
+    sbom:
+        required: false
+        default: True
+    include_dev:
+        required: false
+        default: False
+    quality_gate:
+        required: false
+        default: "LOW"
+    suppression_file:
+        required: false
+        default: ""
+
+runs:
+    using: 'docker'
+    image: 'docker://javidr/yasca'
+    args:
+        - '${{ inputs.file }}'
+        - '--sbom' 
+        - '${{ inputs.sbom }}'
+        - '--include_dev' 
+        - '${{ inputs.include_dev }}'
+        - '--quality_gate' 
+        - '${{ inputs.quality_gate }}'
+        - '--suppression_file' 
+        - '${{ inputs.suppression_file }}'

@@ -7,6 +7,7 @@ import click
 
 EMPTY_SUPPRESSION = 'emptysuppression.json'
 
+
 def scan_maven(filepath, include_dev):
     maven_tree_generator.generate_tree(filepath, include_dev)
     dependencies, appname = maven_tree_generator.get_dependencies()

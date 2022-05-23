@@ -5,6 +5,7 @@ import collections
 import sys
 import click
 
+EMPTY_SUPPRESSION = 'emptysuppression.json'
 
 def scan_maven(filepath, include_dev):
     maven_tree_generator.generate_tree(filepath, include_dev)
@@ -30,13 +31,13 @@ def write_output(num_issues, unique_libraries, num_fp, qg):
 @click.option('--sbom', help='Generates CycloneDX SBOM', default=True)
 @click.option('--include_dev', help='Include dev dependencies', default=False)
 @click.option('--quality_gate', help='Maximum severity allowed', default='LOW')
-@click.option('--suppression_file', help='False positives to remove', default="")
+@click.option('--suppression_file', help='False positives to remove', default=EMPTY_SUPPRESSION)
 def run_cli(file, sbom, include_dev, quality_gate, suppression_file):
     suppressed_items = []
     maven_data, appname, dependencies = scan_maven(file, include_dev)
     if sbom:
         utils.generate_cyclonedx_sbom(dependencies)
-    if suppression_file:
+    if suppression_file != EMPTY_SUPPRESSION:
         maven_data, suppressed_items = utils.suppress_fp(maven_data, suppression_file)
     utils.generate_html_report(maven_data, appname)
     unique_vuln_libraries = collections.Counter(item['package'] for item in maven_data)

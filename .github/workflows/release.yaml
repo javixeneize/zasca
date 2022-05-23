@@ -60,3 +60,9 @@ jobs:
           TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
         run: |
           twine upload dist/*
+
+      - name: Build and push docker image
+        run: |
+          docker build -t javidr/yasca:latest -t javidr/yasca:${{ env.VERSION }} --build-arg yasca_version=${{ env.VERSION }} . --progress=plain
+          echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+          docker push javidr/yasca -a

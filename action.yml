@@ -18,7 +18,6 @@ inputs:
         default: "LOW"
     suppression_file:
         required: false
-        default: ""
 
 runs:
     using: 'docker'

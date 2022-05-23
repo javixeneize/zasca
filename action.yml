@@ -18,6 +18,7 @@ inputs:
         default: "LOW"
     suppression_file:
         required: false
+        default: "emptysuppression.json"
 
 runs:
     using: 'docker'

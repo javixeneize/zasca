@@ -6,8 +6,8 @@ import sys
 import click
 
 
-def scan_maven(filepath, ignore_dev):
-    maven_tree_generator.generate_tree(filepath, ignore_dev)
+def scan_maven(filepath, include_dev):
+    maven_tree_generator.generate_tree(filepath, include_dev)
     dependencies, appname = maven_tree_generator.get_dependencies()
     mavenscan = maven_scanner.Maven_scanner(appname)
     print("Scanning dependencies...")
@@ -27,8 +27,8 @@ def write_output(num_issues, unique_libraries, num_fp, qg):
 
 @click.command()
 @click.argument('file', required=True)
-@click.option('--sbom', help='Generates CycloneDX SBOM', is_flag=True, default=False)
-@click.option('--include_dev', help='Include dev dependencies', is_flag=True, default=False)
+@click.option('--sbom', help='Generates CycloneDX SBOM', default=True)
+@click.option('--include_dev', help='Include dev dependencies', default=False)
 @click.option('--quality_gate', help='Maximum severity allowed', default='LOW')
 @click.option('--suppression_file', help='False positives to remove')
 def run_cli(file, sbom, include_dev, quality_gate, suppression_file):

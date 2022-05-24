@@ -30,10 +30,11 @@ def write_output(num_issues, unique_libraries, num_fp, qg):
 @click.command()
 @click.argument('file', required=True)
 @click.option('--sbom', help='Generates CycloneDX SBOM', default=True)
+@click.option('--sarif', help='Generates sarif report', default=True)
 @click.option('--include_dev', help='Include dev dependencies', default=False)
 @click.option('--quality_gate', help='Maximum severity allowed', default='LOW')
 @click.option('--suppression_file', help='False positives to remove', default=EMPTY_SUPPRESSION)
-def run_cli(file, sbom, include_dev, quality_gate, suppression_file):
+def run_cli(file, sbom, sarif, include_dev, quality_gate, suppression_file):
     suppressed_items = []
     maven_data, appname, dependencies = scan_maven(file, include_dev)
     if sbom:
@@ -45,4 +46,8 @@ def run_cli(file, sbom, include_dev, quality_gate, suppression_file):
     severity_data = collections.Counter(item.get('advisory').get('severity') for item in maven_data)
     qg_passed = utils.check_quality_gate(severity_data, quality_gate)
     write_output(len(maven_data), len(unique_vuln_libraries), len(suppressed_items), qg_passed)
+    if sarif:
+        utils.generate_sarif(maven_data)
     sys.exit(not qg_passed)
+
+# run_cli('pom.xml',False, True, False, "LOW", EMPTY_SUPPRESSION)

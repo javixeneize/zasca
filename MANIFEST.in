@@ -1,3 +1,2 @@
 include yasca/data/queries.yaml
-include yasca/template/report_template.html
-include yasca/template/cyclonedx_template.json
+include yasca/template/*

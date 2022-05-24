@@ -1,0 +1,6 @@
+FROM python:alpine3.15
+RUN apk update && \
+    apk upgrade && \
+    apk add maven
+COPY requirements.txt .
+RUN pip install -r requirements.txt

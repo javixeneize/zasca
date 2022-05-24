@@ -27,13 +27,13 @@ def write_output(num_issues, unique_libraries, num_fp, qg):
     print('Quality gate passed: {}'.format(qg))
 
 
-# @click.command()
-# @click.argument('file', required=True)
-# @click.option('--sbom', help='Generates CycloneDX SBOM', default=True)
-# @click.option('--sarif', help='Generates sarif report', default=True)
-# @click.option('--include_dev', help='Include dev dependencies', default=False)
-# @click.option('--quality_gate', help='Maximum severity allowed', default='LOW')
-# @click.option('--suppression_file', help='False positives to remove', default=EMPTY_SUPPRESSION)
+@click.command()
+@click.argument('file', required=True)
+@click.option('--sbom', help='Generates CycloneDX SBOM', default=True)
+@click.option('--sarif', help='Generates sarif report', default=True)
+@click.option('--include_dev', help='Include dev dependencies', default=False)
+@click.option('--quality_gate', help='Maximum severity allowed', default='LOW')
+@click.option('--suppression_file', help='False positives to remove', default=EMPTY_SUPPRESSION)
 def run_cli(file, sbom, sarif, include_dev, quality_gate, suppression_file):
     suppressed_items = []
     maven_data, appname, dependencies = scan_maven(file, include_dev)
@@ -50,4 +50,4 @@ def run_cli(file, sbom, sarif, include_dev, quality_gate, suppression_file):
         utils.generate_sarif(maven_data)
     sys.exit(not qg_passed)
 
-run_cli('pom.xml',False, True, False, "LOW", EMPTY_SUPPRESSION)
+# run_cli('pom.xml',False, True, False, "LOW", EMPTY_SUPPRESSION)

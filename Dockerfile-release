@@ -1,0 +1,6 @@
+FROM javidr/yasca_base:latest
+ARG yasca_version
+COPY dist/yasca-$yasca_version-py3-none-any.whl .
+RUN pip install yasca-$yasca_version-py3-none-any.whl && rm yasca-$yasca_version-py3-none-any.whl
+COPY entrypoint.sh .
+ENTRYPOINT ["/bin/sh","/entrypoint.sh"]

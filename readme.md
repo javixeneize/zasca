@@ -24,13 +24,9 @@ Once the scan is finished, it generates an html report called sca_report.html, w
 
 ![](img/console.png)
 
-Scan output
-
 
 
 ![](img/html_report.png)
-
-Html report
 
 
 
@@ -86,6 +82,8 @@ The action requires the github token as an env variable. This token already exis
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
 
+
+## Github action - Example
 
 Here is an example of how to use the action in a workflow:
 

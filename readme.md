@@ -1,30 +1,128 @@
 # Yasca
 
-Yasca (Yet Another SCA tool) is an opensource SCA tool based on Github advisories.
+Yasca (Yet Another SCA) tool - or just Yasca, is an opensource SCA tool written in Python. It is relies on Github advisories to detect vulnerabilities in the libraries.
 
-This is presented as a CLI tool, covering only Maven based projects by now.
+In this first release, it only works with Java projects built with Maven, but there are plans to expand it to Gradle,
 
 ## How does it work
 
-It is quite simple to understand how the tool works. Given a pom.xml, it generates the dependency tree, retrieves all
-the libraries, and for each of them, it queries Github advisory endpoint to check if there is any vulnerability.
+Yasca is written in python, and therefore the CLI can be installed with pip
 
-Finally, it generates a report with all the vulnerabilities in all the libraries used in the project.
+`pip install yasca`
 
-Because it needs to connect to github, the tool needs to have a valid github PAT configured as an enviromental
-variable (GITHUB_TOKEN)
+It can also be used as a github action, or as a [docker image](https://hub.docker.com/repository/docker/javidr/yasca)
 
-## How to use it
+Yasca requires an input file (pom.xml) to perform the scan. It builds the dependency tree from that file, and then, queries Github Advisories to search for vulnerabilities in the libraries.Because of this, a github token needs to be set as environental variable under GITHUB_TOKEN.
 
-First of all, as pre-requirements, it requres Maven installed, as it needs to build the dependency tree, and a github
-PAT configured as an enviromental variable, as detailed above.
 
-This is still not included in pypi, so you can either run the pyhton script, or download the code and install it as a
-local package. It will generate a binary called Yasca-cli
 
-The tool needs to receive a parameter with the path to the pom.xml to be scanned. It also has two optional parameters
+export GITHUB_TOKEN=YOUR_TOKEN
 
---html (default True): To generate an html report
+Once the scan is finished, it generates an html report called sca_report.html, with the issues found, and prints in the console a summary of the scan
 
---sbom (default False): To generate a cyclonedx sbom file 
 
+
+![](img/console.png)
+
+Scan output
+
+
+
+![](img/html_report.png)
+
+Html report
+
+
+
+Yasca has some optional functionalities that can be enabled through a flag:
+
+**--sbom**: **True**/False. This flag is set to true by default. If it is enabled, it generates a cyclonedx SBOM file called cyclonedx_report.json
+
+**--include_dev**: True/**False**. By default it is set to false, which means the tool will not scan dev dependencies
+
+**--quality_gate**: OFF/**LOW**/MEDIUM/HIGH/CRITICAL. Set to LOW by default, this is the maximum level of severity allowed. The tool returns an error if there are vulnerabilities with a severity equal or bigger to the quality gate.
+
+**--suppression_file**: Yasca will ignore the vulnerabilities included in the file sent as parameter with this flag. The suppression file is a json that needs to include the vulnerability to ignore (CVE or GHSA) and the package where the vulnerability will be ignored, as for example:
+
+```
+[
+  {
+    "vulnerability": "CVE-2022-22965",
+    "package": "org.springframework.boot:spring-boot-starter-web:1.2.1.RELEASE"
+  },
+    {
+    "vulnerability": "CVE-2019-0199",
+    "package": "org.apache.tomcat.embed:tomcat-embed-core:8.0.15"
+  }
+]
+```
+
+
+
+## Github action
+
+Yasca works perfectly in github workflows, and in fact it was designed to be a github action! Here is the interface for the action, with all the available parameters:
+
+
+
+    file:
+        required: true
+    sbom:
+        required: false
+        default: True
+    include_dev:
+        required: false
+        default: False
+    quality_gate:
+        required: false
+        default: "LOW"
+    suppression_file:
+        required: false
+
+
+
+The action requires the github token as an env variable. This token already exists in github repositories, so you just need to set it inside the action as follows:
+
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+
+
+Here is an example of how to use the action in a workflow:
+
+    name: Yasca test
+    
+    on: push
+    jobs:
+      build:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Checkout Code
+            uses: actions/checkout@v3
+            
+          - name: yascatest
+            uses: javixeneize/yasca@main
+            with:
+              file: pom.xml
+            env:
+              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              
+          - uses: actions/upload-artifact@v3
+            if: always()
+            with:
+              name: html_report
+              path: sca_report.html
+          - uses: actions/upload-artifact@v3
+            if: always()
+            with:
+              name: cycloneDx_report
+              path: cyclonedx_report.json  
+Note that If the quality gate is not matched, it will break the workflow, so you will need to use if: always() syntax to save the reports. 
+
+
+
+## Roadmap
+
+- [ ] Generate sarif report
+- [ ] Improve CycloneDX report to include vulnerabilities
+- [ ] Support NodeJS
+- [ ] Support Gradle

@@ -5,7 +5,7 @@ from jinja2 import Template
 from datetime import datetime
 
 PATH_PROJECT = os.path.realpath(os.path.dirname(__file__))
-SEVERITY = {'CRITICAL': 4, 'HIGH': 3, 'MODERATE': 2, 'LOW': 1}
+SEVERITY = {'CRITICAL': 4, 'HIGH': 3, 'MODERATE': 2, 'LOW': 1,'OFF': 5}
 
 
 def check_quality_gate(severity_data, threshold):

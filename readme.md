@@ -1,18 +1,18 @@
-# Yasca
+# Zasca
 
-Yasca (Yet Another SCA) tool - or just Yasca, is an opensource SCA tool written in Python. It is relies on Github advisories to detect vulnerabilities in the libraries.
+~~Yasca (Yet Another SCA) tool - or just Yasca~~, Zasca (Initially created as Yasca, but since there is another tool with the same name, it was renamed as Zasca ) is an opensource SCA tool written in Python. It is relies on Github advisories to detect vulnerabilities in the libraries.
 
 In this first release, it only works with Java projects built with Maven, but there are plans to expand it to Gradle,
 
 ## How does it work
 
-Yasca is written in python, and therefore the CLI can be installed with pip
+Zasca is written in python, and therefore the CLI can be installed with pip
 
-`pip install yasca`
+`pip install zasca`
 
-It can also be used as a github action, or as a [docker image](https://hub.docker.com/repository/docker/javidr/yasca)
+It can also be used as a github action, or as a [docker image](https://hub.docker.com/repository/docker/javidr/zasca)
 
-Yasca requires an input file (pom.xml) to perform the scan. It builds the dependency tree from that file, and then, queries Github Advisories to search for vulnerabilities in the libraries.Because of this, a github token needs to be set as environental variable under GITHUB_TOKEN.
+Zasca requires an input file (pom.xml) to perform the scan. It builds the dependency tree from that file, and then, queries Github Advisories to search for vulnerabilities in the libraries.Because of this, a github token needs to be set as environmental variable under GITHUB_TOKEN.
 
 
 
@@ -30,7 +30,7 @@ Once the scan is finished, it generates an html report called sca_report.html, w
 
 
 
-Yasca has some optional functionalities that can be enabled through a flag:
+Zasca has some optional functionalities that can be enabled through a flag:
 
 **--sbom**: **True**/False. This flag is set to true by default. If it is enabled, it generates a cyclonedx SBOM file called cyclonedx_report.json
 
@@ -38,7 +38,7 @@ Yasca has some optional functionalities that can be enabled through a flag:
 
 **--quality_gate**: OFF/**LOW**/MEDIUM/HIGH/CRITICAL. Set to LOW by default, this is the maximum level of severity allowed. The tool returns an error if there are vulnerabilities with a severity equal or bigger to the quality gate.
 
-**--suppression_file**: Yasca will ignore the vulnerabilities included in the file sent as parameter with this flag. The suppression file is a json that needs to include the vulnerability to ignore (CVE or GHSA) and the package where the vulnerability will be ignored, as for example:
+**--suppression_file**: Zasca will ignore the vulnerabilities included in the file sent as parameter with this flag. The suppression file is a json that needs to include the vulnerability to ignore (CVE or GHSA) and the package where the vulnerability will be ignored, as for example:
 
 ```
 [
@@ -57,7 +57,7 @@ Yasca has some optional functionalities that can be enabled through a flag:
 
 ## Github action
 
-Yasca works perfectly in github workflows, and in fact it was designed to be a github action! Here is the interface for the action, with all the available parameters:
+Zasca works perfectly in github workflows, and in fact it was designed to be a github action! Here is the interface for the action, with all the available parameters:
 
 
 
@@ -87,7 +87,7 @@ The action requires the github token as an env variable. This token already exis
 
 Here is an example of how to use the action in a workflow:
 
-    name: Yasca test
+    name: Zasca test
     
     on: push
     jobs:
@@ -97,8 +97,8 @@ Here is an example of how to use the action in a workflow:
           - name: Checkout Code
             uses: actions/checkout@v3
             
-          - name: yascatest
-            uses: javixeneize/yasca@main
+          - name: zascatest
+            uses: javixeneize/zasca@main
             with:
               file: pom.xml
             env:

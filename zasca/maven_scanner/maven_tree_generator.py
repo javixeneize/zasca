@@ -3,7 +3,7 @@ import sys
 import os
 
 PATH_PROJECT = os.path.realpath(os.path.dirname(__file__))
-DEP_FILE = PATH_PROJECT + '/yasca_dep_tree.txt'
+DEP_FILE = PATH_PROJECT + '/zasca_dep_tree.txt'
 
 
 def generate_tree(filepath, include_dev):

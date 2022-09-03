@@ -1,9 +1,45 @@
-maven_query: "
+MAVEN: "
     query ($package: String, $after: String)
     {
       securityVulnerabilities(
         first: 100
         ecosystem: MAVEN
+        package: $package
+        after: $after
+      ) {
+        nodes {
+          severity
+          vulnerableVersionRange
+          advisory {
+            cvss {
+              score
+            }
+            identifiers {
+              type
+              value
+            }
+          description
+          summary
+          }
+          updatedAt
+          firstPatchedVersion {
+            identifier
+          }
+        }
+        totalCount
+        pageInfo {
+            hasNextPage
+            endCursor
+        }
+      }
+    }
+    "
+NPM: "
+    query ($package: String, $after: String)
+    {
+      securityVulnerabilities(
+        first: 100
+        ecosystem: NPM
         package: $package
         after: $after
       ) {

@@ -8,20 +8,20 @@ headers = {"Authorization": "bearer {}".format(os.getenv("GITHUB_TOKEN"))}
 PATH_PROJECT = os.path.realpath(os.path.dirname(__file__))
 
 
-class Maven_scanner():
+class Scanner():
     def __init__(self, appname):
         self.appname = appname
         self.advisory_list = []
-        self.query = yaml.safe_load(open(PATH_PROJECT + '/../data/queries.yaml')).get('maven_query')
 
-    def get_advisories(self, package):
+    def get_advisories(self, package, ecosystem):
         vulndata = []
         hasnext = True
         nextcursor = None
+        query = yaml.safe_load(open(PATH_PROJECT + '/data/queries.yaml')).get(ecosystem)
         while hasnext:
             variables = {'package': package, 'after': nextcursor}
             request = requests.post('https://api.github.com/graphql',
-                                    json={'query': self.query, 'variables': variables}, headers=headers)
+                                    json={'query': query, 'variables': variables}, headers=headers)
             if request.status_code == 200:
                 data = json.loads(request.content)
                 vulndata = vulndata + data.get('data').get('securityVulnerabilities').get('nodes')

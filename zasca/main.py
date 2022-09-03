@@ -61,4 +61,3 @@ def run_cli(file, sbom, include_dev, quality_gate, suppression_file):
     qg_passed = utils.check_quality_gate(severity_data, quality_gate)
     write_output(len(data), len(unique_vuln_libraries), len(suppressed_items), qg_passed)
     sys.exit(not qg_passed)
-

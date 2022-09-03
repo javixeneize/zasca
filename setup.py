@@ -6,15 +6,15 @@ with open('requirements.txt') as f:
 __version__ = "1.0.0"
 
 setup(
-    name="yasca",
+    name="zasca",
     version=__version__,
-    description="Yet Another SCA tool",
+    description="Yet Another SCA tool, but with Z",
     author="Javier Dominguez",
     packages=find_packages(),
     include_package_data=True,
     entry_points={
         'console_scripts': [
-            'yasca=yasca.main:run_cli',
+            'zasca=zasca.main:run_cli',
         ],
     },
     install_requires=requirements,

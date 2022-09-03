@@ -1,4 +1,4 @@
-name: Yasca PR
+name: Zasca PR
 
 on: pull_request
 jobs:
@@ -17,10 +17,10 @@ jobs:
         run: pip install -r requirements_dev.txt
 
       - name: Flake8 styles
-        run: python -m flake8 ./yasca
+        run: python -m flake8 ./zasca
 
       - name: Bandit security scan
-        run: python -m bandit -r ./yasca
+        run: python -m bandit -r ./zasca
 
       - name: Safety dependency scan
         run: python -m safety check
@@ -34,7 +34,7 @@ jobs:
       - name: BumpVersion if PR 'to-branch' is main
         if: github.base_ref == 'main'
         run: |
-          bump2version minor
+          bump2version major
 
       - name: Commit back to the repo
         if: github.base_ref == 'main'

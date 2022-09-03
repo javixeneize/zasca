@@ -1,5 +1,5 @@
-name: 'Yasca-action'
-description: 'Github action to run Yasca'
+name: 'Zasca-action'
+description: 'Github action to run Zasca'
 Author: 'javixeneize'
 branding:
   icon: 'shield'  

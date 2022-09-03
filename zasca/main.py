@@ -1,6 +1,6 @@
-from yasca import utils, scanner
-from yasca.maven_scanner import maven_tree_generator
-from yasca.node_scanner import node_tree_generator
+from zasca import utils, scanner
+from zasca.maven_scanner import maven_tree_generator
+from zasca.node_scanner import node_tree_generator
 from tqdm import tqdm
 import collections
 import sys

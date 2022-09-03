@@ -26,7 +26,7 @@ def scan_node(filepath):
 
 def trigger_scan(dependencies, scanner, ecosystem):
     print("Scanning dependencies...")
-    for dependency in tqdm(dependencies[0:3]):
+    for dependency in tqdm(dependencies):
         advisories = scanner.get_advisories(dependency.get('package'), ecosystem)
         if advisories:
             scanner.validate_vulnerable_version(advisories, dependency.get('package'), dependency.get('version'))

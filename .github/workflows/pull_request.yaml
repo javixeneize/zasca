@@ -34,7 +34,7 @@ jobs:
       - name: BumpVersion if PR 'to-branch' is main
         if: github.base_ref == 'main'
         run: |
-          bump2version major
+          bump2version minor
 
       - name: Commit back to the repo
         if: github.base_ref == 'main'
